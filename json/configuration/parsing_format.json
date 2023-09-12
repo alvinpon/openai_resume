@@ -1,0 +1,48 @@
+{
+    "Profile": {
+        "Name": "",
+        "Phone": "",
+        "Email": "",
+        "Location": "",
+        "Personal URLs": []
+    },
+    "Experience": [
+        {
+            "Date": "",
+            "Company": "",
+            "Position": "",
+            "Skills": [],
+            "Responsibilities": []
+        }
+    ],
+    "Education": [
+        {
+            "Date": "",
+            "Institution": "",
+            "Degree": "",
+            "Details": []
+        }
+    ],
+    "Patents": [
+        {
+            "Date": "",
+            "Title": ""
+        }
+    ],
+    "Publications": [
+        {
+            "Date": "",
+            "Title": ""
+        }
+    ],
+    "Certificates":[
+        {
+            "Date": "",
+            "Title": "",
+            "Certifying Authority": ""
+        }
+    ],
+    "Computer Skills":[
+        
+    ]
+}

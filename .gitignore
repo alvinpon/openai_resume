@@ -1,0 +1,9 @@
+# Folder
+.venv
+.vscode
+
+# File
+.DS_Store
+json/configuration/api_key.json
+json/parsed_resume/*
+log/*.log
