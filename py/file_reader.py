@@ -1,6 +1,6 @@
 from logger import Logger
 from PyPDF2 import PdfReader
-from typing import Callable, Union, Dict, List
+from typing import Callable, Dict, List
 
 import docx, io, os
 
@@ -36,9 +36,9 @@ class FileReader:
 
         return file_paths
 
-    def _read_file(self, file_path: str, reader_func: Callable) -> str: 
+    def _read_file(self, file_path: str, reader_func: Callable) -> str:
         """
-        Read a file using the specified reader function.
+        Read the content of a file using the specified reader function.
 
         Args:
             file_path (str): The path to the file to be read.
@@ -47,6 +47,7 @@ class FileReader:
         Returns:
             str: The content of the file as a string.
         """
+
         try:
             with open(file_path, "rb") as file:
                 return reader_func(file)
@@ -100,6 +101,10 @@ class FileReader:
     def read_file_contents(self) -> Dict[str, str]:
         """
         Read the contents of files within specified directories and return them as a dictionary.
+
+        This method reads the contents of all files within the specified directories, 
+        supporting DOCX and PDF file formats, and returns them as a dictionary where 
+        keys are file paths and values are the contents of the respective files.
 
         Returns:
             Dict[str, str]: A dictionary where keys are file paths and values are the
