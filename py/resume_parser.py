@@ -1,5 +1,5 @@
 from file_reader import FileReader
-from jsoner import JSONer
+from json_handler import JSONHandler
 from logger import Logger
 from mongo_db import MongoDB
 from pathlib import Path
@@ -19,7 +19,7 @@ class ResumeParser:
             _logger (logging.Logger): The logger instance for logging messages.
         """
         self._json_dir_path = "../json/"
-        self._jsoner = JSONer()
+        self._json_handler = JSONHandler()
         self._logger = Logger(__name__).get_logger()
 
         self._set_openai_api_key()
@@ -35,7 +35,7 @@ class ResumeParser:
         """
         api_key_path = os.path.join(self._json_dir_path, "configuration/api_key.json")
         try:
-            openai.api_key = self._jsoner.read_json(api_key_path).get("api_key")
+            openai.api_key = self._json_handler.load_json(api_key_path).get("api_key")
         except FileNotFoundError as e:
             error_message = f"Failed to set API key: API key file not found at {api_key_path}. Please provide a valid API key. {e}"
             self._logger.error(error_message)
@@ -72,7 +72,7 @@ class ResumeParser:
         parsed_contents = []
 
         # Load the parsing format from a JSON file
-        parsing_format = json.dumps(self._jsoner.read_json(os.path.join(self._json_dir_path, "configuration/parsing_format.json")), indent=4)
+        parsing_format = json.dumps(self._json_handler.load_json(os.path.join(self._json_dir_path, "configuration/parsing_format.json")), indent=4)
 
         # Read resume files and their contents
         file_paths_and_file_contents = FileReader(["../docx", "../pdf"]).read_file_contents()
@@ -86,11 +86,11 @@ class ResumeParser:
                 parsed_contents.append(json.loads(response["choices"][0]["message"]["content"]))
 
                 # Write the parsed content to a JSON file
-                self._jsoner.write_json(os.path.join(self._json_dir_path, "parsed_resume", Path(file_path).stem + ".json"), response["choices"][0]["message"]["content"])
+                self._json_handler.save_json(os.path.join(self._json_dir_path, "parsed_resume", Path(file_path).stem + ".json"), response["choices"][0]["message"]["content"])
                 self._logger.info(f"Parsed  {file_path}, Finish Reason: {response['choices'][0]['finish_reason']}")
 
         # Retrieve the DB configuration information
-        db_config = self._jsoner.read_json("../json/configuration/mongo_db.json")
+        db_config = self._json_handler.load_json("../json/configuration/mongo_db.json")
 
         # Create a MongoDB instance and establish a connection
         with MongoDB(db_config.get("uri"), db_config.get("database_name"), db_config.get("collection_name")) as mongo_db:

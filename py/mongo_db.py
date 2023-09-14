@@ -192,4 +192,4 @@ class MongoDB:
         except Exception as exception:
             self._logger.error(f"An error occurred while finding documents: {exception}")
             return None
-        
+ 
