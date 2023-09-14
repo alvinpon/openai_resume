@@ -95,4 +95,4 @@ class ResumeParser:
         # Create a MongoDB instance and establish a connection
         with MongoDB(db_config.get("uri"), db_config.get("database_name"), db_config.get("collection_name")) as mongo_db:
             # Insert the parsed resume data into MongoDB
-            mongo_db.insert_data(parsed_contents)
+            mongo_db.insert_documents(parsed_contents)
