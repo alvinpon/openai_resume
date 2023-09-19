@@ -36,7 +36,7 @@ class Logger:
         console_handler.setFormatter(formatter)
 
         # Create a file handler for detailed log messages
-        file_handler = logging.FileHandler(Path(self._log_dir) / (date.today().__str__() + ".log"))
+        file_handler = logging.FileHandler(Path(self._log_dir) / (date.today().__str__() + ".log"), encoding='utf-8')
         file_handler.setLevel(self._file_level)
         file_handler.setFormatter(formatter)
 

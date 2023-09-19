@@ -1,6 +1,7 @@
 # Folder
 .venv
 .vscode
+py/__pycache__
 
 # File
 .DS_Store

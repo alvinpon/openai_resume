@@ -18,7 +18,8 @@ class ResumeParser:
             _json_dir_path (str): The directory path where JSON files are stored.
             _logger (logging.Logger): The logger instance for logging messages.
         """
-        self._json_dir_path = "../json/"
+        self._json_dir_path = os.path.join("..", "json")
+        self._conf_dir_path = os.path.join(self._json_dir_path, "configuration")
         self._json_handler = JSONHandler()
         self._logger = Logger(__name__).get_logger()
 
@@ -33,7 +34,7 @@ class ResumeParser:
         Raises:
             FileNotFoundError: If the API key file is not found.
         """
-        api_key_path = os.path.join(self._json_dir_path, "configuration/api_key.json")
+        api_key_path = os.path.join(self._conf_dir_path, "api_key.json")
         try:
             openai.api_key = self._json_handler.load_json(api_key_path).get("api_key")
         except FileNotFoundError as e:
@@ -58,6 +59,10 @@ class ResumeParser:
             model="gpt-3.5-turbo-16k",
             messages=[
                 {
+                    "role": "system",
+                    "content": "You are a helpful assistant that parses resumes."
+                },
+                {
                     "role": "user",
                     "content": f"Parse {owner}'s resume by using the JSON format below.\n\n{resume_content}\n\n{parsing_format}"
                 }
@@ -72,10 +77,10 @@ class ResumeParser:
         parsed_contents = []
 
         # Load the parsing format from a JSON file
-        parsing_format = json.dumps(self._json_handler.load_json(os.path.join(self._json_dir_path, "configuration/parsing_format.json")), indent=4)
+        parsing_format = json.dumps(self._json_handler.load_json(os.path.join(self._conf_dir_path, "parsing_format.json")), indent=4)
 
         # Read resume files and their contents
-        file_paths_and_file_contents = FileReader(["../docx", "../pdf"]).read_file_contents()
+        file_paths_and_file_contents = FileReader([os.path.join("..", "docx"), os.path.join("..", "pdf")]).read_file_contents()
 
         if file_paths_and_file_contents is not None:
             for file_path, file_content in file_paths_and_file_contents.items():
@@ -90,7 +95,7 @@ class ResumeParser:
                 self._logger.info(f"Parsed  {file_path}, Finish Reason: {response['choices'][0]['finish_reason']}")
 
         # Retrieve the DB configuration information
-        db_config = self._json_handler.load_json("../json/configuration/mongo_db.json")
+        db_config = self._json_handler.load_json(os.path.join(self._conf_dir_path, "mongo_db.json"))
 
         # Create a MongoDB instance and establish a connection
         with MongoDB(db_config.get("uri"), db_config.get("database_name"), db_config.get("collection_name")) as mongo_db:
